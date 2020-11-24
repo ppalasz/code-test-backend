@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2016
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30711.63
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{78B423EB-36DA-43B9-9273-5488FDCBCA46}"
 	ProjectSection(SolutionItems) = preProject
@@ -14,6 +14,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SlothEnterprise.External", "SlothEnterprise.External\SlothEnterprise.External.csproj", "{C5132AB2-34EF-4002-8F2B-1965A0C3B03D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SlothEnterprise.ProductApplication.Tests", "SlothEnterprise.ProductApplication.Tests\SlothEnterprise.ProductApplication.Tests.csproj", "{C18D15FE-1106-42A0-9EF2-57E49FAD6C1E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E22A4A29-2BAF-4272-9E4A-454719B3C053}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{01886F34-C8B4-4434-A70E-47595BB0E5A5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,6 +40,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A3EDEDC4-FB1B-43EE-BBBA-26BEF89B55CD} = {E22A4A29-2BAF-4272-9E4A-454719B3C053}
+		{C5132AB2-34EF-4002-8F2B-1965A0C3B03D} = {E22A4A29-2BAF-4272-9E4A-454719B3C053}
+		{C18D15FE-1106-42A0-9EF2-57E49FAD6C1E} = {01886F34-C8B4-4434-A70E-47595BB0E5A5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F3C2E31E-606C-4832-94B4-09FE2779704A}
