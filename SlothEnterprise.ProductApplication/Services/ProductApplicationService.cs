@@ -6,19 +6,19 @@ using SlothEnterprise.ProductApplication.Models.Products;
 
 namespace SlothEnterprise.ProductApplication.Services
 {
-    public class ProductApplicationService
+    public class ProductApplicationService: IProductApplicationService
     {
         private readonly ISelectInvoiceService _selectInvoiceService;
-        private readonly IConfidentialInvoiceService _confidentialInvoiceWebService;
+        private readonly IConfidentialInvoiceService _confidentialInvoiceService;
         private readonly IBusinessLoansService _businessLoansService;
 
         public ProductApplicationService(
             ISelectInvoiceService selectInvoiceService, 
-            IConfidentialInvoiceService confidentialInvoiceWebService, 
+            IConfidentialInvoiceService confidentialInvoiceService, 
             IBusinessLoansService businessLoansService)
         {
             _selectInvoiceService = selectInvoiceService;
-            _confidentialInvoiceWebService = confidentialInvoiceWebService;
+            _confidentialInvoiceService = confidentialInvoiceService;
             _businessLoansService = businessLoansService;
         }
 
@@ -27,16 +27,17 @@ namespace SlothEnterprise.ProductApplication.Services
             switch (application.Product)
             {
                 case SelectiveInvoiceDiscount sid:
+                {
                     return _selectInvoiceService
                         .SubmitApplicationFor(
-                                application.CompanyData.Number.ToString(), 
-                                sid.InvoiceAmount, 
-                                sid.AdvancePercentage
-                            );
-
+                            application.CompanyData.Number.ToString(),
+                            sid.InvoiceAmount,
+                            sid.AdvancePercentage
+                        );
+                }
                 case ConfidentialInvoiceDiscount cid:
                 {
-                    var result = _confidentialInvoiceWebService
+                    var result = _confidentialInvoiceService
                         .SubmitApplicationFor(
                                 new CompanyDataRequest
                                 {
