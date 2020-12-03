@@ -8,74 +8,9 @@ namespace SlothEnterprise.ProductApplication.Services
 {
     public class ProductApplicationService: IProductApplicationService
     {
-        private readonly ISelectInvoiceService _selectInvoiceService;
-        private readonly IConfidentialInvoiceService _confidentialInvoiceService;
-        private readonly IBusinessLoansService _businessLoansService;
-
-        public ProductApplicationService(
-            ISelectInvoiceService selectInvoiceService, 
-            IConfidentialInvoiceService confidentialInvoiceService, 
-            IBusinessLoansService businessLoansService)
-        {
-            _selectInvoiceService = selectInvoiceService;
-            _confidentialInvoiceService = confidentialInvoiceService;
-            _businessLoansService = businessLoansService;
-        }
-
         public int SubmitApplicationFor(ISellerApplication application)
         {
-            switch (application.Product)
-            {
-                case SelectiveInvoiceDiscount sid:
-                {
-                    return _selectInvoiceService
-                        .SubmitApplicationFor(
-                            application.CompanyData.Number.ToString(),
-                            sid.InvoiceAmount,
-                            sid.AdvancePercentage
-                        );
-                }
-                case ConfidentialInvoiceDiscount cid:
-                {
-                    var result = _confidentialInvoiceService
-                        .SubmitApplicationFor(
-                                new CompanyDataRequest
-                                {
-                                    CompanyFounded = application.CompanyData.Founded,
-                                    CompanyNumber = application.CompanyData.Number,
-                                    CompanyName = application.CompanyData.Name,
-                                    DirectorName = application.CompanyData.DirectorName
-                                }, 
-                                cid.TotalLedgerNetworth, 
-                                cid.AdvancePercentage, 
-                                cid.VatRate
-                            );
-
-                    return result.Success ? result.ApplicationId ?? -1 : -1;
-                }
-                case BusinessLoans loans:
-                {
-                    var result = _businessLoansService
-                        .SubmitApplicationFor(
-                                new CompanyDataRequest
-                                {
-                                    CompanyFounded = application.CompanyData.Founded,
-                                    CompanyNumber = application.CompanyData.Number,
-                                    CompanyName = application.CompanyData.Name,
-                                    DirectorName = application.CompanyData.DirectorName
-                                },
-                                new LoansRequest
-                                {
-                                    InterestRatePerAnnum = loans.InterestRatePerAnnum,
-                                    LoanAmount = loans.LoanAmount
-                                }
-                            );
-
-                    return result.Success ? result.ApplicationId ?? -1 : -1;
-                }
-                default:
-                    throw new InvalidOperationException();
-            }
+            return application.Product.SubmitApplication();
         }
     }
 }

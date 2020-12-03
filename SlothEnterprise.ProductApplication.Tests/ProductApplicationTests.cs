@@ -8,7 +8,6 @@ using SlothEnterprise.ProductApplication.Models.Products;
 using SlothEnterprise.ProductApplication.Services;
 using Xunit;
 using Moq;
-using SlothEnterprise.ProductApplication.Tests.Models;
 
 namespace SlothEnterprise.ProductApplication.Tests
 {
@@ -32,11 +31,7 @@ namespace SlothEnterprise.ProductApplication.Tests
 
             _aplicationResultMock = new Mock<IApplicationResult>();
 
-            _productApplicationService = new ProductApplicationService(
-                    _selectInvoiceServiceMock.Object,
-                    _confidentialInvoiceServiceMock.Object,
-                    _businessLoansServiceMock.Object
-                );
+            _productApplicationService = new ProductApplicationService();
 
             _sellerApplicationMock.SetupProperty(
                 p => p.CompanyData,
@@ -49,14 +44,16 @@ namespace SlothEnterprise.ProductApplication.Tests
         {
             #region arrange
 
+            _sellerApplication = _sellerApplicationMock.Object;
+
             _aplicationResultMock.SetupProperty(p => p.Success, true);
             _aplicationResultMock.SetupProperty(p => p.ApplicationId, 1);
             _sellerApplicationMock.SetupProperty(
                 p => p.Product,
-                new SelectiveInvoiceDiscount()
+                new SelectiveInvoiceDiscount(
+                    _selectInvoiceServiceMock.Object, 
+                    _sellerApplication)
             );
-
-            _sellerApplication = _sellerApplicationMock.Object;
 
             _selectInvoiceServiceMock
                 .Setup<int>(
@@ -84,16 +81,18 @@ namespace SlothEnterprise.ProductApplication.Tests
         {
             #region arrange
 
+            _sellerApplication = _sellerApplicationMock.Object;
+
             _aplicationResultMock.SetupProperty(p => p.Success, success);
                 _aplicationResultMock.SetupProperty(p => p.ApplicationId, applicationId);
                 _sellerApplicationMock.SetupProperty(
                     p => p.Product,
-                    new ConfidentialInvoiceDiscount()
+                    new ConfidentialInvoiceDiscount(
+                        _confidentialInvoiceServiceMock.Object,
+                        _sellerApplication)
                 );
 
-            _sellerApplication = _sellerApplicationMock.Object;
-
-            _confidentialInvoiceServiceMock
+                _confidentialInvoiceServiceMock
                 .Setup<IApplicationResult>(
                     m => m.SubmitApplicationFor(
                         It.IsAny<CompanyDataRequest>(),
@@ -121,14 +120,16 @@ namespace SlothEnterprise.ProductApplication.Tests
         {
             #region arrange
 
+            _sellerApplication = _sellerApplicationMock.Object;
+
             _aplicationResultMock.SetupProperty(p => p.Success, success);
             _aplicationResultMock.SetupProperty(p => p.ApplicationId, applicationId);
             _sellerApplicationMock.SetupProperty(
                 p => p.Product,
-                new BusinessLoans()
+                new BusinessLoans(
+                    _businessLoansServiceMock.Object,
+                    _sellerApplication)
             );
-
-            _sellerApplication = _sellerApplicationMock.Object;
 
             _businessLoansServiceMock
                 .Setup<IApplicationResult>(
@@ -145,34 +146,5 @@ namespace SlothEnterprise.ProductApplication.Tests
                 .Should()
                 .Be(result);
         }
-
-
-        [Fact]
-        public void SubmitApplicationFor_Dummy()
-        {
-            #region arrange
-
-            _sellerApplicationMock.SetupProperty(
-                p => p.Product,
-                new DummyProduct()
-            );
-
-            _sellerApplication = _sellerApplicationMock.Object;
-
-            _businessLoansServiceMock
-                .Setup<IApplicationResult>(
-                    m => m.SubmitApplicationFor(
-                        It.IsAny<CompanyDataRequest>(),
-                        It.IsAny<LoansRequest>()
-                    )
-                ).Returns(_aplicationResultMock.Object);
-
-            #endregion arrange
-
-            //act and assert, should throw an exception because it's dummy product
-            Assert.Throws<InvalidOperationException>(() => _productApplicationService.SubmitApplicationFor(_sellerApplication));
-        }
-
-       
     }
 }

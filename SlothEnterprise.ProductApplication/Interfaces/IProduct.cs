@@ -3,5 +3,7 @@
     public interface IProduct
     {
         int Id { get; }
+
+        int SubmitApplication();
     }
 }

@@ -3,7 +3,5 @@
     public interface IProductApplicationService
     {
         int SubmitApplicationFor(ISellerApplication application);
-
-
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace SlothEnterprise.ProductApplication.Models.Products
+﻿namespace SlothEnterprise.ProductApplication.Models
 {
     public class VatRates
     {
